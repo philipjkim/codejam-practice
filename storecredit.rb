@@ -5,10 +5,14 @@ if __FILE__ == $0
 		puts "Usage: #{$0} input_filename"
 		exit
 	end
-	filename = ARGV[0]
-	unless File.exist?(filename)
-		puts "File not exist: #{filename}"
+	in_filename = ARGV[0]
+	unless File.exist?(in_filename)
+		puts "File not exist: #{in_filename}"
 		exit
 	end
-	puts `cat #{filename}`
+
+	lines = File.open(in_filename).read.split("\n")
+	lines.length.times do |line_number|
+		puts "Line #{line_number}: #{lines[line_number]}"
+	end
 end
