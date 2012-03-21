@@ -5,5 +5,10 @@ if __FILE__ == $0
 		puts "Usage: #{$0} input_filename"
 		exit
 	end
-	puts "Input filename: #{ARGV[0]}"
+	filename = ARGV[0]
+	unless File.exist?(filename)
+		puts "File not exist: #{filename}"
+		exit
+	end
+	puts `cat #{filename}`
 end
