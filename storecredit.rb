@@ -11,6 +11,9 @@ if __FILE__ == $0
 		exit
 	end
 
+	out_filename = in_filename.split(".").first + ".out"
+	out_file = File.open(out_filename, 'w')
+
 	lines = File.open(in_filename).read.split("\n")
 	num_cases = Integer(lines[0])
 	1.upto(num_cases) do |case_number|
@@ -38,7 +41,7 @@ if __FILE__ == $0
 			end
 		end
 
-		puts "Case ##{case_number}: #{valid_pairs.join(' ')}"
+		out_file.puts("Case ##{case_number}: #{valid_pairs.join(' ')}")
 	end
 
 end
