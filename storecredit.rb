@@ -19,12 +19,21 @@ if __FILE__ == $0
 		prices_line_number = (case_number * 3)
 		prices = lines[prices_line_number].split.map{|price| Integer(price)}
 
+		index_prices = []
+		raw_prices = lines[prices_line_number].split
+		raw_prices.length.times do |i|
+			index_prices.push([i+1, Integer(raw_prices[i])])
+		end
+
 		valid_pairs = nil
-		prices.each do |price|
+		index_prices.each do |index, price|
+			temp_index_prices = Array.new(index_prices)
+			temp_index_prices.delete_at(index -1)
 			expected_price = credit - price
-			if prices.include?(expected_price)
-				valid_pairs = [prices.index(price)+1,
-								prices.index(expected_price)+1]
+			expected_index = temp_index_prices.map{|i, p| p}
+								.index(expected_price)
+			if expected_index
+				valid_pairs = [index, temp_index_prices[expected_index][0]]
 				break
 			end
 		end
