@@ -33,8 +33,7 @@ if __FILE__ == $0
 			temp_index_prices = Array.new(index_prices)
 			temp_index_prices.delete_at(index -1)
 			expected_price = credit - price
-			expected_index = temp_index_prices.map{|i, p| p}
-								.index(expected_price)
+			expected_index = temp_index_prices.map{|i, p| p}.index(expected_price)
 			if expected_index
 				valid_pairs = [index, temp_index_prices[expected_index][0]]
 				break
