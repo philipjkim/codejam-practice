@@ -12,7 +12,13 @@ if __FILE__ == $0
 	end
 
 	lines = File.open(in_filename).read.split("\n")
-	lines.length.times do |line_number|
-		puts "Line #{line_number}: #{lines[line_number]}"
+	num_cases = Integer(lines[0])
+	1.upto(num_cases) do |case_number|
+		credit_line_number = (case_number * 3) - 2
+		prices_line_number = (case_number * 3)
+		print "Case No. #{case_number}: ",
+			"credit=#{lines[credit_line_number]}, ",
+			"prices=#{lines[prices_line_number]}\n"
 	end
+
 end
