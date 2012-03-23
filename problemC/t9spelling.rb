@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env ruby1.9
 
 if __FILE__ == $0
 	unless ARGV.length == 1
@@ -14,7 +14,7 @@ if __FILE__ == $0
 	started = Time.now
 
 	out_filename = in_filename.split(".").first + ".out"
-	#out_file = File.open(out_filename, 'w')
+	out_file = File.open(out_filename, 'w')
 
 	rawhash = [["abc","2"], ["def","3"], ["ghi","4"], ["jkl","5"],
 				["mno","6"], ["pqrs","7"], ["tuv","8"], ["wxyz","9"],
@@ -25,12 +25,18 @@ if __FILE__ == $0
 			keyhash[chars[idx]] = numkey * (idx + 1)
 		end
 	end
-	puts keyhash
+	#puts keyhash
 
 	lines = File.open(in_filename).read.split("\n")
-	2.upto(lines.length - 1) do |index|
-		press_seq = lines[index].split("").map{|char| keyhash[char]}
-		puts "Case ##{index}: #{press_seq.join(",")}"
+	1.upto(lines.length - 1) do |index|
+		ps = lines[index].split("").map{|char| keyhash[char]}
+		(ps.length - 1).times do |i|
+			ps[i] = ps[i] + " " if ps[i][0] == ps[i+1][0]
+		end
+
+		out_file.puts "Case ##{index}: #{ps.join("")}"
+		print "."
+		#puts "Case ##{index}: #{ps.join("")}"
 	end
-	puts Time.now - started
+	print "\n#{Time.now - started}\n"
 end
