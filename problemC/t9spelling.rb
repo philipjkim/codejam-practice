@@ -16,6 +16,15 @@ if __FILE__ == $0
 	out_filename = in_filename.split(".").first + ".out"
 	#out_file = File.open(out_filename, 'w')
 
+	rawhash = [["abc","2"], ["def","3"], ["ghi","4"], ["jkl","5"],
+				["mno","6"], ["pqrs","7"], ["tuv","8"], ["wxyz","9"],
+				[" ","0"]] 
+	keyhash = {}
+	rawhash.each do |chars, numkey|
+		chars.split("").each {|char| keyhash[char] = numkey}
+	end
+	puts keyhash
+
 	lines = File.open(in_filename).read.split("\n")
 	2.upto(lines.length - 1) do |index|
 		puts "Case ##{index}: #{lines[index]}"
