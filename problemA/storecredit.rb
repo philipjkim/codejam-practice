@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-def do_ls(case_number, lines)
+def do_ls(case_number, lines, out_file)
 	credit_line_number = (case_number * 3) - 2
 	credit = Integer(lines[credit_line_number])
 	prices_line_number = (case_number * 3)
@@ -20,10 +20,11 @@ def do_ls(case_number, lines)
 		current_price1_index += 1
 	end
 
-	puts "Case ##{case_number}: #{wanted_price1_index} #{wanted_price2_index}"
+	out_file.puts "Case ##{case_number}: #{wanted_price1_index} #{wanted_price2_index}"
+	print "."
 end
 
-def do_sooo(case_number, lines)
+def do_sooo(case_number, lines, out_file)
 	credit_line_number = (case_number * 3) - 2
 	credit = Integer(lines[credit_line_number])
 	prices_line_number = (case_number * 3)
@@ -45,7 +46,8 @@ def do_sooo(case_number, lines)
 		end
 	end
 
-	puts("Case ##{case_number}: #{valid_pairs.join(' ')}")
+	out_file.puts("Case ##{case_number}: #{valid_pairs.join(' ')}")
+	print "."
 end
 
 if __FILE__ == $0
@@ -62,16 +64,16 @@ if __FILE__ == $0
 	started = Time.now
 
 	out_filename = in_filename.split(".").first + ".out"
-	#out_file = File.open(out_filename, 'w')
+	out_file = File.open(out_filename, 'w')
 
 	lines = File.open(in_filename).read.split("\n")
 	num_cases = Integer(lines[0])
 	1.upto(num_cases) do |case_number|
 =begin
-		do_ls(case_number, lines)
+		do_ls(case_number, lines, out_file)
 =end
-		do_sooo(case_number, lines)
+		do_sooo(case_number, lines, out_file)
 
 	end
-	puts Time.now - started
+	print "\n#{Time.now - started}\n"
 end
