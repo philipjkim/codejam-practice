@@ -21,12 +21,17 @@ if __FILE__ == $0
 				[" ","0"]] 
 	keyhash = {}
 	rawhash.each do |chars, numkey|
-		chars.split("").each {|char| keyhash[char] = numkey}
+		chars.length.times do |idx|
+			keyhash[chars[idx]] = numkey * (idx + 1)
+		end
 	end
 	puts keyhash
 
 	lines = File.open(in_filename).read.split("\n")
 	2.upto(lines.length - 1) do |index|
+		lines[index].split("").each do |char|
+		# do something.	
+		end
 		puts "Case ##{index}: #{lines[index]}"
 	end
 	puts Time.now - started
