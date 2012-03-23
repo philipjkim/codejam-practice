@@ -29,10 +29,8 @@ if __FILE__ == $0
 
 	lines = File.open(in_filename).read.split("\n")
 	2.upto(lines.length - 1) do |index|
-		lines[index].split("").each do |char|
-		# do something.	
-		end
-		puts "Case ##{index}: #{lines[index]}"
+		press_seq = lines[index].split("").map{|char| keyhash[char]}
+		puts "Case ##{index}: #{press_seq.join(",")}"
 	end
 	puts Time.now - started
 end
