@@ -1,17 +1,15 @@
 #!/usr/bin/env python
 
 import sys
-import time
 from random import *
 
-SIZE = 10
+SIZE = 100
 
 def sort(l):
     print "## Unknown sort"
     numbers = l[:]
     print "Unsorted: ", numbers
 
-    started = time.time()
     for i in range(len(numbers)):
         for j in range(i, len(numbers)):
             if numbers[i] > numbers[j]:
@@ -20,16 +18,13 @@ def sort(l):
                 numbers[j] = t
                 #print "Swapped: ", numbers
 
-    elapsed = time.time() - started
     print "Sorted: ", numbers
-    print "Elapsed: %.10f" % elapsed
 
 def bubblesort(l):
     print "## Bubble sort"
     numbers = l[:]
     print "Unsorted: ", numbers
 
-    started = time.time()
     swapped = True
     while (swapped):
         swapped = False
@@ -40,13 +35,13 @@ def bubblesort(l):
                 numbers[i+1] = t
                 swapped = True
                 #print "Swapped: ", numbers
-    elapsed = time.time() - started
     print "Sorted: ", numbers
-    print "Elapsed: %.10f" % elapsed
-
 
 if __name__ == "__main__":
     l = range(SIZE)
     shuffle(l)
-    sort(l)
-    bubblesort(l)
+    from timeit import Timer
+    t1 = Timer("sort(l)", "from __main__ import sort, l")
+    t2 = Timer("bubblesort(l)", "from __main__ import bubblesort, l")
+    print t1.timeit(1)
+    print t2.timeit(1)
