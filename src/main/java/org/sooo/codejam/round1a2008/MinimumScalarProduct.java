@@ -36,7 +36,7 @@ public class MinimumScalarProduct {
 			Collections.sort(v1);
 			Collections.sort(v2);
 			v2 = Lists.reverse(v2);
-			int scalar = 0;
+			long scalar = 0;
 			for (int j = 0; j < v1.size(); j++)
 				scalar += (v1.get(j) * v2.get(j));
 			System.out.printf("Case #%d: %d\n", (i + 1), scalar);
