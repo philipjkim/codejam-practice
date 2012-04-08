@@ -1,12 +1,9 @@
 package org.sooo.codejam.round1a2008;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import com.google.common.base.Charsets;
-import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.io.Files;
@@ -16,72 +13,77 @@ public class Milkshakes {
 	public static void printResult(String inputFilePath) throws Exception {
 		List<String> lines = Files.readLines(new File(inputFilePath),
 				Charsets.UTF_8);
-		int cases = Integer.parseInt(lines.get(0));
+		int numCase = Integer.parseInt(lines.get(0));
 		int lineNo = 1;
-		for (int i = 0; i < cases; i++) {
-			boolean possible = true;
-			int numShakes = Integer.parseInt(lines.get(lineNo++));
-			List<Integer> output = Lists.newArrayList();
-			for (int j = 0; j < numShakes; j++)
-				output.add(-1);
+		for (int i = 0; i < numCase; i++) {
+			int numFlavor = Integer.parseInt(lines.get(lineNo++));
+			int numCustomer = Integer.parseInt(lines.get(lineNo++));
 
-			int numCustomers = Integer.parseInt(lines.get(lineNo));
-			List<String> custInfos = Lists.newArrayList();
-			for (int j = 1; j <= numCustomers; j++) {
-				String raw = lines.get(lineNo + j);
-				custInfos.add(raw);
-			}
-			Collections.sort(custInfos, new Comparator<String>() {
-				@Override
-				public int compare(String o1, String o2) {
-					return o1.length() - o2.length();
-				}
-			});
+			boolean[][] canUse = new boolean[numCustomer][numFlavor];
+			int[] malted = new int[numCustomer]; // value = flavor
+			int[] numCanUse = new int[numCustomer];
+			boolean[] visited = new boolean[numCustomer];
+			boolean[] choice = new boolean[numFlavor];
 
-			for (String raw : custInfos) {
-				List<String> custInfo = Lists.newArrayList(Splitter.on(" ")
+			for (int customer = 0; customer < numCustomer; customer++) {
+				malted[customer] = -1;
+				numCanUse[customer] = 0;
+				visited[customer] = false;
+				for (int k = 0; k < numFlavor; k++)
+					canUse[customer][k] = false;
+
+				String raw = lines.get(lineNo++);
+				List<String> tokens = Lists.newArrayList(Splitter.on(" ")
 						.split(raw.substring(raw.indexOf(" ") + 1)));
-				boolean taken = false;
-
-				List<Milkshake> shakes = Lists.newArrayList();
-				for (int k = 0; k < custInfo.size(); k = k + 2) {
-					Integer flavor = Integer.parseInt(custInfo.get(k));
-					Integer malted = Integer.parseInt(custInfo.get(k + 1));
-					shakes.add(new Milkshake(flavor, malted));
-				}
-				Collections.sort(shakes, new Comparator<Milkshake>() {
-					@Override
-					public int compare(Milkshake o1, Milkshake o2) {
-						return o1.flavor - o2.flavor;
+				for (int k = 0; k < tokens.size(); k = k + 2) {
+					int flavor = Integer.parseInt(tokens.get(k)) - 1;
+					int malt = Integer.parseInt(tokens.get(k + 1));
+					if (malt == 1)
+						malted[customer] = flavor;
+					else {
+						canUse[customer][flavor] = true;
+						numCanUse[customer]++;
 					}
-				});
-				for (Milkshake shake : shakes) {
-					if (output.get(shake.flavor - 1) == shake.malted)
-						taken = true;
-					else if (output.get(shake.flavor - 1) == -1) {
-						if (shake.malted == 0) {
-							output.set(shake.flavor - 1, 0);
-							taken = true;
-						} else if (shake.malted == 1 && !output.contains(1)) {
-							output.set(shake.flavor - 1, 1);
-							taken = true;
+				}
+			}
+
+			for (int flavor = 0; flavor < numFlavor; flavor++)
+				choice[flavor] = false;
+
+			boolean possible = true;
+			while (true) {
+				boolean found = false;
+				for (int customer = 0; customer < numCustomer; customer++) {
+					if (numCanUse[customer] == 0 && !visited[customer]) {
+						visited[customer] = true;
+						found = true;
+						if (malted[customer] == -1) {
+							possible = false;
+							break;
+						} else {
+							choice[malted[customer]] = true;
+							for (int k = 0; k < numCustomer; k++) {
+								if (canUse[k][malted[customer]] == true) {
+									numCanUse[k]--;
+									canUse[k][malted[customer]] = false;
+								}
+							}
 						}
 					}
 				}
-				if (!taken) {
-					possible = false;
+				if (!found)
 					break;
-				}
+				if (!possible)
+					break;
 			}
-			for (int j = 0; j < output.size(); j++) {
-				if (output.get(j) == -1)
-					output.set(j, 0);
-			}
-			String result = possible ? Joiner.on(" ").join(output)
-					: "IMPOSSIBLE";
-			System.out.printf("Case #%d: %s\n", (i + 1), result);
 
-			lineNo += (numCustomers + 1);
+			System.out.printf("Case #%d:", i + 1);
+			if (possible) {
+				for (int f = 0; f < numFlavor; f++)
+					System.out.printf(" %d", choice[f] ? 1 : 0);
+			} else
+				System.out.print(" IMPOSSIBLE");
+			System.out.println();
 		}
 	}
 }
